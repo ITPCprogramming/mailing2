@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script src="jquery.js"></script>
+<script>
+    $(document).ready (function () {
+        $("#submit").click (function () {
+            $("messageShow").hide();
+            var name = $("#name").val();
+            var lname = $("#secondname").val();
+            var web = $("#web").val();
+            var description = $("#subject").val();
+            var fail = "";
+            if (name.length < 2) {
+                fail = "Имя не меньше 3 символов";
+            }
+            else if (lname.length < 2) {
+                fail = "Фамилия не меньше 3 символов";
+            }
+            else if (web == 0) {
+                fail = "Выберите тип сайта";
+            }
+        else if (description.length < 9) {
+            fail = "Описание должно быть не меньше 10 символов";
+        }
+            if (fail != "") {
+                $("#messageShow").html (fail + "<div class='clear'><br></div>");
+                $("#messageShow").show();
+                return false;
+            }else if( $.ajax ({
+                       url: 'feedback.php',
+                       type: 'POST',
+                       data: {'name': name, 'lname': lname, 'web': web, 'desk': description},
+                       dataType: 'html',
+                       success: function (data) {
+                           $("#messageShow").html(data + "<div class='clear'><br></div>");
+                           $("#messageShow").show();
+                       }
+                   })){
+                alert("Ожидайте ответа!");
+
+                
+               }
+        });
+    });
+</script>﻿
+<form action="index.html" method="POST">
+    <p><label FOR="name">Enter the name</label></p>
+    <p><input type="text" id="name"></p>
+    <p><label for="secondname">Enter the second name</label></p>
+    <p><input type="text" id="secondname"></p>
+    <p><label for="web">Enter the type of web</label></p>
+    <p><select id="web">
+    <option value="0" selected = "selected"></option>
+    <option value="Shop" name="Shop">Shop</option>
+    <option value="Blog" name="Blog">Blog</option>
+    </select></p>
+    <label for="subject">Enter the description</label>
+    <p><input type="text" id="subject"></p>
+    <p id = "messageShow"></p>
+    <p><input type="submit" id="submit" placeholder="Отправить"></p>
+</form>
+</body>
+</html>
